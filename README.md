@@ -3,7 +3,9 @@ https://github.com/honey-comb/translations
 
 ## Description
 
-HoneyComb CMS translations package
+HoneyComb CMS translations package. It uses 
+https://github.com/spatie/laravel-translation-loader package for loading translations from database.
+Feel free to check their documentation.
 
 ## Requirement
 
@@ -29,7 +31,22 @@ or
 ```
 
 ## Laravel integration
-    
+
+Publish package config
+```php
+php artisan vendor:publish --provider="HoneyComb\Translations\Providers\HCTranslationServiceProvider"
+```    
+You can set up file names, which won't be imported to database in `config/translations-loader.php` file.
+
+```php
+'exclude_groups' => [
+   //
+],
+```
+
 Run Artisan commands
 
-    php artisan import:translations
+`php artisan hc:update`
+
+// imports project translations files  
+`php artisan import:translations`
