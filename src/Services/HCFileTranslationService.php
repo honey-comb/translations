@@ -31,8 +31,8 @@ namespace HoneyComb\Translations\Services;
 
 use HoneyComb\Translations\Models\HCFileTranslation;
 use HoneyComb\Translations\Repositories\HCFileTranslationRepository;
-use Illuminate\Foundation\Application;
 use Illuminate\Filesystem\Filesystem;
+use Illuminate\Foundation\Application;
 use Illuminate\Translation\FileLoader;
 
 /**
@@ -42,29 +42,34 @@ use Illuminate\Translation\FileLoader;
 class HCFileTranslationService
 {
     /**
+     *
+     */
+    const JSON_GROUP = '_json';
+
+    /**
      * @var HCFileTranslationRepository
      */
-    private $repository;
+    protected $repository;
 
     /**
      * @var Application
      */
-    private $app;
+    protected $app;
 
     /**
      * @var Filesystem
      */
-    private $files;
+    protected $files;
 
     /**
      * @var FileLoader
      */
-    private $loader;
+    protected $loader;
 
     /**
      * @var array
      */
-    private $translations = [];
+    protected $translations = [];
 
     /**
      * HCFileTranslationService constructor.
@@ -134,6 +139,7 @@ class HCFileTranslationService
         // process only string values
         if (is_array($value)) {
             info('formatTranslation array return', compact('key', 'value', 'locale', 'group'));
+
             return;
         }
 
@@ -191,7 +197,6 @@ class HCFileTranslationService
 
             $locale = basename($jsonTranslationFile, '.json');
 
-            // TODO check this
             $group = self::JSON_GROUP;
 
             // Retrieves JSON entries of the given locale only

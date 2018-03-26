@@ -84,24 +84,6 @@ class HCFileTranslationRepository extends HCBaseRepository
     }
 
     /**
-     * List search elements
-     *
-     * @param Builder $query
-     * @param string $phrase
-     * @return Builder
-     */
-    protected function searchQuery(Builder $query, string $phrase): Builder
-    {
-        $fields = $this->getModel()::getFillableFields();
-
-        return $query->where(function (Builder $query) use ($fields, $phrase) {
-            return $query->where('group', 'LIKE', '%' . $phrase . '%')
-                ->orWhere('key', 'LIKE', '%' . $phrase . '%')
-                ->orWhere('text', 'LIKE', '%' . $phrase . '%');
-        });
-    }
-
-    /**
      * Delete translations
      *
      * @param array $ids
@@ -128,24 +110,6 @@ class HCFileTranslationRepository extends HCBaseRepository
     }
 
     /**
-     * @param array $text
-     * @return array
-     */
-    private function formatForMultiLang(array $text): array
-    {
-        $response = [];
-
-        foreach ($text as $lang => $translation) {
-            $response[] = [
-                'language_code' => $lang,
-                'translation' => $translation,
-            ];
-        }
-
-        return $response;
-    }
-
-    /**
      * @return array
      */
     public function getGroupsForFilter(): array
@@ -161,5 +125,41 @@ class HCFileTranslationRepository extends HCBaseRepository
                 ];
             })
             ->toArray();
+    }
+
+    /**
+     * List search elements
+     *
+     * @param Builder $query
+     * @param string $phrase
+     * @return Builder
+     */
+    protected function searchQuery(Builder $query, string $phrase): Builder
+    {
+        $fields = $this->getModel()::getFillableFields();
+
+        return $query->where(function (Builder $query) use ($fields, $phrase) {
+            return $query->where('group', 'LIKE', '%' . $phrase . '%')
+                ->orWhere('key', 'LIKE', '%' . $phrase . '%')
+                ->orWhere('text', 'LIKE', '%' . $phrase . '%');
+        });
+    }
+
+    /**
+     * @param array $text
+     * @return array
+     */
+    protected function formatForMultiLang(array $text): array
+    {
+        $response = [];
+
+        foreach ($text as $lang => $translation) {
+            $response[] = [
+                'language_code' => $lang,
+                'translation' => $translation,
+            ];
+        }
+
+        return $response;
     }
 }

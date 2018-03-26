@@ -30,6 +30,7 @@ declare(strict_types = 1);
 namespace HoneyComb\Translations\Providers;
 
 use HoneyComb\Starter\Providers\HCBaseServiceProvider;
+use HoneyComb\Translations\Console\HCImportTranslationsFromFiles;
 use HoneyComb\Translations\Repositories\HCFileTranslationRepository;
 use HoneyComb\Translations\Services\HCFileTranslationService;
 
@@ -49,7 +50,9 @@ class HCTranslationServiceProvider extends HCBaseServiceProvider
      *
      * @var array
      */
-    protected $commands = [];
+    protected $commands = [
+        HCImportTranslationsFromFiles::class,
+    ];
 
     /**
      * Controller namespace
