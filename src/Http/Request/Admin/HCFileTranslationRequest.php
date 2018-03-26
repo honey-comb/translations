@@ -27,71 +27,76 @@
 
 declare(strict_types = 1);
 
-namespace HoneyComb\Translations\Providers;
+namespace HoneyComb\Translations\Http\Requests\Admin;
 
-use HoneyComb\Starter\Providers\HCBaseServiceProvider;
-use HoneyComb\Translations\Repositories\HCFileTranslationRepository;
-use HoneyComb\Translations\Services\HCFileTranslationService;
+use Illuminate\Foundation\Http\FormRequest;
 
 /**
- * Class HCTranslationServiceProvider
- * @package HoneyComb\Translations\Providers
+ * Class HCFileTranslationRequest
+ * @package HoneyComb\Translations\Http\Requests\Admin
  */
-class HCTranslationServiceProvider extends HCBaseServiceProvider
+class HCFileTranslationRequest extends FormRequest
 {
     /**
-     * @var string
-     */
-    protected $homeDirectory = __DIR__;
-
-    /**
-     * Console commands
+     * Get request inputs
      *
-     * @var array
+     * @return array
      */
-    protected $commands = [];
-
-    /**
-     * Controller namespace
-     *
-     * @var string
-     */
-    protected $namespace = 'HoneyComb\Translations\Http\Controllers';
-
-    /**
-     * Provider name
-     *
-     * @var string
-     */
-    protected $packageName = 'HCTranslation';
-
-    /**
-     *
-     */
-    public function register(): void
+    public function getTranslations(): array
     {
-        $this->mergeConfigFrom(
-            $this->packagePath('config/translation-loader.php'), 'translation-loader'
-        );
-
-        $this->registerRepositories();
-
-        $this->registerServices();
+        return $this->input('translations');
     }
 
     /**
+     * Get ids to delete, force delete or restore
      *
+     * @return array
      */
-    private function registerRepositories(): void
+    public function getListIds(): array
     {
-        $this->app->singleton(HCFileTranslationRepository::class);
+        return $this->input('list', []);
     }
 
     /**
+     * Determine if the user is authorized to make this request.
      *
+     * @return bool
      */
-    private function registerServices(): void
+    public function authorize(): bool
     {
-        $this->app->singleton(HCFileTranslationService::class);
+        return true;
+    }
+
+    /**
+     * Get the validation rules that apply to the request.
+     *
+     * @return array
+     */
+    public function rules(): array
+    {
+        switch ($this->method()) {
+            case 'POST':
+                if ($this->segment(4) == 'restore') {
+                    return [
+                        'list' => 'required|array',
+                    ];
+                }
+
+                return [];
+
+            case 'PUT':
+
+                return ['translations' => 'required'];
+
+            case 'PATCH':
+                return [];
+
+            case 'DELETE':
+                return [
+                    'list' => 'required|array',
+                ];
+        }
+
+        return [];
     }
 }

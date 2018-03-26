@@ -4,11 +4,33 @@
         "sequence": 0,
         "namespace": "HoneyComb\\Translations\\"
     },
-    "formData": {},
-    "adminMenu": [],
+    "formData": {
+        "file.translations": "HoneyComb\\Translations\\Forms\\HCFileTranslationForm"
+    },
+    "adminMenu": [
+        {
+            "route": "admin.file.translations.index",
+            "parent": "admin.index",
+            "translation": "HCTranslation::file_translations.page_title",
+            "icon": "file-alt",
+            "aclPermission": "_file_translations_list"
+        }
+    ],
     "seeder": "",
-    "routes": [],
+    "routes": [
+        "Routes/Admin/routes.file.translations.php"
+    ],
     "acl": {
-        "permissions": []
+        "permissions": [
+            {
+                "name": "acl.file.translations",
+                "controller": "HoneyComb\\Translations\\Http\\Controllers\\Admin\\HCFileTranslationController",
+                "actions": [
+                    "_file_translations_update",
+                    "_file_translations_delete",
+                    "_file_translations_list"
+                ]
+            }
+        ]
     }
 }
