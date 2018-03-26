@@ -1,0 +1,53 @@
+{
+    "name": "honey-comb/translations",
+    "description": "",
+    "keywords": ["honeycomb", "translations", "laravel"],
+    "homepage": "https://github.com/honey-comb/translations",
+    "license": "MIT",
+    "authors": [
+        "Mantas Paulauskas"
+    ],
+    "repositories": [],
+    "require": {
+        "php": ">=7.1.0",
+        "laravel/framework": "5.5.*",
+        "honey-comb/starter": "*"
+    },
+    "require-dev": {
+        "brianium/paratest": "^1.0",
+        "mockery/mockery": "^1.0",
+        "orchestra/testbench-browser-kit": "^3.5",
+        "phpunit/phpunit": "^6.4"
+    },
+    "autoload": {
+        "psr-4": {
+            "HoneyComb\\Translations\\": "src/"
+        },
+        "files": [
+            "src/Helpers/helpers.php"
+        ]
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\": "tests/"
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "HoneyComb\\Core\\Providers\\HCTranslationServiceProvider"
+            ]
+        }
+    },
+    "scripts": {
+        "test": [
+            "paratest -p4 --colors"
+        ]
+    },
+    "config": {
+        "secure-http": false,
+        "platform": {
+            "php": "7.1"
+        }
+    }
+}

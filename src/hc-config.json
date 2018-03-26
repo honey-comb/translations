@@ -1,0 +1,14 @@
+{
+    "general": {
+        "packageName": "HCTranslation",
+        "sequence": 0,
+        "namespace": "HoneyComb\\Translations\\"
+    },
+    "formData": {},
+    "adminMenu": [],
+    "seeder": "",
+    "routes": [],
+    "acl": {
+        "permissions": []
+    }
+}
