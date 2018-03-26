@@ -41,7 +41,7 @@
     "extra": {
         "laravel": {
             "providers": [
-                "HoneyComb\\Core\\Providers\\HCTranslationServiceProvider"
+                "HoneyComb\\Translations\\Providers\\HCTranslationServiceProvider"
             ]
         }
     },
