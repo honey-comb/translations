@@ -5,13 +5,17 @@
     "homepage": "https://github.com/honey-comb/translations",
     "license": "MIT",
     "authors": [
-        "Mantas Paulauskas"
+        {
+            "name": "Mantas Paulauskas",
+            "email": "mantas.p@innovationbase.eu"
+        }
     ],
     "repositories": [],
     "require": {
         "php": ">=7.1.0",
         "laravel/framework": "5.5.*",
-        "honey-comb/starter": "*"
+        "honey-comb/starter": "*",
+        "spatie/laravel-translation-loader": "^2.1"
     },
     "require-dev": {
         "brianium/paratest": "^1.0",
