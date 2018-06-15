@@ -42,9 +42,8 @@ Route::prefix(config('hc.admin_url'))
                 ->name('admin.api.file.translations')
                 ->middleware('acl:_file_translations_admin_list');
 
-            Route::get('list', 'HCFileTranslationController@getList')
-                ->name('admin.api.file.translations.list')
-                ->middleware('acl:_file_translations_admin_list');
+            Route::get('/options', 'HCFileTranslationController@getOptions')
+                ->name('admin.api.file.translations.options');
 
             Route::delete('/', 'HCFileTranslationController@deleteRecord')
                 ->name('admin.api.file.translations.delete')

@@ -35,6 +35,7 @@ use HoneyComb\Translations\Http\Requests\Admin\HCFileTranslationRequest;
 use HoneyComb\Translations\Models\HCFileTranslation;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Collection;
 
 /**
  * Class HCFileTranslationRepository
@@ -56,9 +57,23 @@ class HCFileTranslationRepository extends HCBaseRepository
      * @param string $translationId
      * @return HCFileTranslation|Model|null
      */
-    public function getById(string $translationId): ? HCFileTranslation
+    public function getById(string $translationId): ?HCFileTranslation
     {
         return $this->makeQuery()->find($translationId);
+    }
+
+    /**
+     * @param HCFileTranslationRequest $request
+     * @return Collection
+     */
+    public function getOptions(HCFileTranslationRequest $request): Collection
+    {
+        return $this->createBuilderQuery($request)->get()->map(function ($record) {
+            return [
+                'id' => $record->id,
+                'label' => $record->key,
+            ];
+        });
     }
 
     /**
