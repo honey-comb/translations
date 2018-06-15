@@ -86,7 +86,7 @@ class HCFileTranslationController extends HCBaseController
             'url' => route('admin.api.file.translations'),
             'form' => route('admin.api.form-manager', ['file.translations']),
             'headers' => $this->getTableColumns(),
-            'actions' => $this->getActions('_file_translations'),
+            'actions' => $this->getActions('honey_comb_translations_file_translations'),
             'filters' => $this->getFilters(),
         ];
 
@@ -194,17 +194,18 @@ class HCFileTranslationController extends HCBaseController
      * Getting allowed actions for admin view
      *
      * @param string $prefix
+     * @param array $except
      * @return array
      */
-    protected function getActions(string $prefix): array
+    protected function getActions(string $prefix, array $except = []): array
     {
         $actions[] = 'search';
 
-        if (auth()->user()->can($prefix . '_update')) {
+        if (!in_array('_update', $except) && auth()->user()->can($prefix . '_update')) {
             $actions[] = 'update';
         }
 
-        if (auth()->user()->can($prefix . '_delete')) {
+        if (!in_array('_delete', $except) && auth()->user()->can($prefix . '_delete')) {
             $actions[] = 'delete';
         }
 
