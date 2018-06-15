@@ -37,7 +37,6 @@ use HoneyComb\Starter\Forms\HCBaseForm;
  */
 class HCFileTranslationForm extends HCBaseForm
 {
-
     /**
      * @var bool
      */
