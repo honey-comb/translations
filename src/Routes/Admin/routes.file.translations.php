@@ -43,7 +43,7 @@ Route::domain(config('hc.admin_domain'))
                 ->name('admin.api.file.translations')
                 ->middleware('acl:_file_translations_admin_list');
 
-            Route::get('/options', 'HCFileTranslationController@getOptions')
+            Route::get('options', 'HCFileTranslationController@getOptions')
                 ->name('admin.api.file.translations.options');
 
             Route::delete('/', 'HCFileTranslationController@deleteRecord')
