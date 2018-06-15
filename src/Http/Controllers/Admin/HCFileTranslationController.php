@@ -120,6 +120,10 @@ class HCFileTranslationController extends HCBaseController
         );
     }
 
+    /**
+     * @param HCFileTranslationRequest $request
+     * @return JsonResponse
+     */
     public function getOptions(HCFileTranslationRequest $request): JsonResponse
     {
         return response()->json(
