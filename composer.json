@@ -8,22 +8,25 @@
         {
             "name": "Mantas Paulauskas",
             "email": "mantas.p@innovationbase.eu"
+        },
+        {
+            "name": "Darius Šlubelis",
+            "email": "darius.s@innovationbase.eu"
         }
     ],
     "repositories": [],
     "require": {
-        "php": ">=7.1.0",
-        "laravel/framework": "5.5.*",
-        "honey-comb/starter": "*",
-        "honey-comb/core": "0.2.*",
-        "spatie/laravel-translation-loader": "^2.1"
+        "php": "^7.1",
+        "laravel/framework": "5.6.*",
+        "spatie/laravel-translation-loader": "^2.1",
+        "honey-comb/starter": "0.2.*",
+        "honey-comb/core": "0.3.*"
     },
     "require-dev": {
-        "brianium/paratest": "^1.0",
         "mockery/mockery": "^1.0",
-        "orchestra/testbench-browser-kit": "^3.5",
-        "phpunit/phpunit": "^6.4",
-        "codedungeon/phpunit-result-printer": "^0.9.1"
+        "orchestra/testbench-browser-kit": "^3.6",
+        "phpunit/phpunit": "~7.2",
+        "codedungeon/phpunit-result-printer": "^0.19"
     },
     "autoload": {
         "psr-4": {
@@ -51,9 +54,6 @@
         ]
     },
     "config": {
-        "secure-http": false,
-        "platform": {
-            "php": "7.1"
-        }
+        "secure-http": false
     }
 }
