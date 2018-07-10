@@ -43,20 +43,22 @@ class HCTranslationLoaderManager extends FileLoader
      * @param string $group
      * @param string $namespace
      * @return array
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function load($locale, $group, $namespace = null): array
     {
         $fileTranslations = parent::load($locale, $group, $namespace);
-
+        
         if (in_array($group, config('translation-loader.exclude_groups'))) {
             return $fileTranslations;
         }
 
         if (!is_null($namespace) && $namespace !== '*') {
-            return $fileTranslations;
+            // set group name with package namespace. We expect here that $namespace == packageName
+            $group = $namespace . '::' . $group;
         }
 
-        $loaderTranslations = $this->getTranslationsForTranslationLoaders($locale, $group, $namespace);
+        $loaderTranslations = $this->getTranslationsForTranslationLoaders($locale, $group);
 
         return array_replace_recursive($fileTranslations, $loaderTranslations);
     }
@@ -64,20 +66,16 @@ class HCTranslationLoaderManager extends FileLoader
     /**
      * @param string $locale
      * @param string $group
-     * @param string|null $namespace
      * @return array
      */
-    protected function getTranslationsForTranslationLoaders(
-        string $locale,
-        string $group,
-        string $namespace = null
-    ): array {
+    protected function getTranslationsForTranslationLoaders(string $locale, string $group): array
+    {
         return collect(config('translation-loader.translation_loaders'))
             ->map(function (string $className) {
                 return app($className);
             })
-            ->mapWithKeys(function (TranslationLoader $translationLoader) use ($locale, $group, $namespace) {
-                return $translationLoader->loadTranslations($locale, $group, $namespace);
+            ->mapWithKeys(function (TranslationLoader $translationLoader) use ($locale, $group) {
+                return $translationLoader->loadTranslations($locale, $group);
             })
             ->toArray();
     }

@@ -34,6 +34,7 @@ use HoneyComb\Translations\Repositories\HCFileTranslationRepository;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use Illuminate\Translation\FileLoader;
+use Symfony\Component\Finder\SplFileInfo;
 
 /**
  * Class HCFileTranslationService
@@ -83,7 +84,8 @@ class HCFileTranslationService
         $this->app = $app;
         $this->files = $files;
 
-        $this->loader = new FileLoader($files, $this->app->langPath());
+//        $this->loader = new FileLoader($files, $this->app->langPath());
+        $this->loader = app('translation.loader');
     }
 
     /**
@@ -117,6 +119,7 @@ class HCFileTranslationService
      *
      * @link https://github.com/barryvdh/laravel-translation-manager/blob/master/src/Manager.php
      * @return array
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     public function parseLanguageFiles(): array
     {
@@ -149,44 +152,31 @@ class HCFileTranslationService
     }
 
     /**
-     *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function parseTranslations(): void
     {
-        foreach ($this->files->directories($this->app['path.lang']) as $langPath) {
-            $locale = basename($langPath);
+        foreach ($this->files->directories($this->app['path.lang']) as $key => $langPath) {
 
-            /** @var SplFileInfo $file */
-            foreach ($this->files->allfiles($langPath) as $file) {
+            if (ends_with($langPath, 'vendor')) {
 
-                $group = $file->getBasename('.php');
+                foreach ($this->files->directories($langPath) as $package) {
+                    $packageName = basename($package);
 
-                if (in_array($group, config('translation-loader.exclude_groups'))) {
-                    continue;
-                }
-
-
-                $subLangPath = str_replace($langPath . DIRECTORY_SEPARATOR, "", $file->getPath());
-                $subLangPath = str_replace(DIRECTORY_SEPARATOR, "/", $subLangPath);
-                $langPath = str_replace(DIRECTORY_SEPARATOR, "/", $langPath);
-
-                if ($subLangPath != $langPath) {
-                    $group = $subLangPath . "/" . $group;
-                }
-
-                $translations = $this->loader->load($locale, $group);
-
-                if ($translations && is_array($translations)) {
-                    foreach (array_dot($translations) as $key => $value) {
-                        $this->formatTranslation($key, $value, $locale, $group);
+                    foreach ($this->files->directories($package) as $items) {
+                        $this->parseFromFolder($items, $packageName);
                     }
                 }
+            }
+            else {
+                $this->parseFromFolder($langPath);
             }
         }
     }
 
     /**
      *
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
      */
     private function parseJsonTranslations(): void
     {
@@ -204,6 +194,47 @@ class HCFileTranslationService
 
             if ($translations && is_array($translations)) {
                 foreach ($translations as $key => $value) {
+                    $this->formatTranslation($key, $value, $locale, $group);
+                }
+            }
+        }
+    }
+
+    /**
+     * @param string $langPath
+     * @param null $packageName
+     * @return void
+     * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     */
+    private function parseFromFolder(string $langPath, $packageName = null): void
+    {
+        $locale = basename($langPath);
+
+        /** @var SplFileInfo $file */
+        foreach ($this->files->allfiles($langPath) as $file) {
+
+            $group = $file->getBasename('.php');
+
+            if (in_array($group, config('translation-loader.exclude_groups'))) {
+                continue;
+            }
+
+            $subLangPath = str_replace($langPath . DIRECTORY_SEPARATOR, "", $file->getPath());
+            $subLangPath = str_replace(DIRECTORY_SEPARATOR, "/", $subLangPath);
+            $langPath = str_replace(DIRECTORY_SEPARATOR, "/", $langPath);
+
+            if ($subLangPath != $langPath && is_null($packageName)) {
+                $group = $subLangPath . '/' . $group;
+            }
+
+            $translations = $this->loader->load($locale, $group, $packageName);
+
+            if ($translations && is_array($translations)) {
+                if ($packageName) {
+                    $group = $packageName . '::' . $group;
+                }
+
+                foreach (array_dot($translations) as $key => $value) {
                     $this->formatTranslation($key, $value, $locale, $group);
                 }
             }
