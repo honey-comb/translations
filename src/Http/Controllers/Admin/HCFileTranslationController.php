@@ -169,7 +169,6 @@ class HCFileTranslationController extends HCBaseController
         return $this->response->success("Updated");
     }
 
-
     /**
      * Soft delete record
      *

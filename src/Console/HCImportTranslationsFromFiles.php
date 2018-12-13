@@ -32,6 +32,8 @@ namespace HoneyComb\Translations\Console;
 use HoneyComb\Translations\Models\HCFileTranslation;
 use HoneyComb\Translations\Services\HCFileTranslationService;
 use Illuminate\Console\Command;
+use Illuminate\Filesystem\Filesystem;
+use Illuminate\Translation\FileLoader;
 
 /**
  * Class HCImportTranslationsFromFiles
@@ -59,14 +61,20 @@ class HCImportTranslationsFromFiles extends Command
     protected $fileTranslationService;
 
     /**
+     * @var Filesystem
+     */
+    protected $files;
+
+    /**
      * Create a new command instance.
      *
      * @param HCFileTranslationService $fileTranslationService
      */
-    public function __construct(HCFileTranslationService $fileTranslationService)
+    public function __construct(HCFileTranslationService $fileTranslationService, Filesystem $filesystem)
     {
         parent::__construct();
 
+        $this->files = $filesystem;
         $this->fileTranslationService = $fileTranslationService;
     }
 
@@ -77,7 +85,11 @@ class HCImportTranslationsFromFiles extends Command
      */
     public function handle(): void
     {
-        $translations = $this->fileTranslationService->parseLanguageFiles();
+        $loader = new FileLoader($this->files, app()->langPath());
+
+        $translations = $this->fileTranslationService
+            ->setLoader($loader)
+            ->parseLanguageFiles();
 
         $this->importTranslations($translations);
     }

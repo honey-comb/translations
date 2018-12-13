@@ -31,6 +31,7 @@ namespace HoneyComb\Translations\Services;
 
 use HoneyComb\Translations\Models\HCFileTranslation;
 use HoneyComb\Translations\Repositories\HCFileTranslationRepository;
+use Illuminate\Contracts\Translation\Loader;
 use Illuminate\Filesystem\Filesystem;
 use Illuminate\Foundation\Application;
 use Illuminate\Translation\FileLoader;
@@ -66,6 +67,17 @@ class HCFileTranslationService
      * @var FileLoader
      */
     protected $loader;
+
+    /**
+     * @param Loader $loader
+     * @return HCFileTranslationService
+     */
+    public function setLoader(Loader $loader): HCFileTranslationService
+    {
+        $this->loader = $loader;
+
+        return $this;
+    }
 
     /**
      * @var array
@@ -116,10 +128,10 @@ class HCFileTranslationService
     }
 
     /**
-     *
      * @link https://github.com/barryvdh/laravel-translation-manager/blob/master/src/Manager.php
      * @return array
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \ReflectionException
      */
     public function parseLanguageFiles(): array
     {
@@ -153,6 +165,7 @@ class HCFileTranslationService
 
     /**
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \ReflectionException
      */
     private function parseTranslations(): void
     {
@@ -177,6 +190,7 @@ class HCFileTranslationService
     /**
      *
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \ReflectionException
      */
     private function parseJsonTranslations(): void
     {
@@ -205,6 +219,7 @@ class HCFileTranslationService
      * @param null $packageName
      * @return void
      * @throws \Illuminate\Contracts\Filesystem\FileNotFoundException
+     * @throws \ReflectionException
      */
     private function parseFromFolder(string $langPath, $packageName = null): void
     {
